@@ -119,9 +119,12 @@ export class CheckoutComponent implements OnInit {
         this.order.products = this.getProducts();
       });
     } else {
-      this.checkoutService.getCheckout().subscribe((checkout: CheckoutDto) => {
+      this.checkoutService.getCheckoutAuth().subscribe((checkout: any) => {
         this.order = new CheckoutOrder(checkout);
         this.products = checkout.products;
+        for (let i = 0; i < checkout.products.length; i++) {
+          this.products[i].overallPrice = checkout.products[i].sum;
+        }
       });
     }
   }

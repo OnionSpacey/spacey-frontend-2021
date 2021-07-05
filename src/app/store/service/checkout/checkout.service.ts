@@ -17,9 +17,14 @@ export default class CheckoutService {
     return this.http.get<CheckoutDto>(checkoutUrl);
   }
 
-  getTimeSlots(date: Timeslot): Observable<Timeslot[]> {
-    const timeSlotsUrl = environment.url + '/api/v1/timeslots/';
-    return this.http.post<Timeslot[]>(timeSlotsUrl, date);
+  getCheckoutAuth(): Observable<any> {
+    const checkoutUrl = environment.url + '/api/v1/checkout/';
+    return this.http.get<any>(checkoutUrl);
+  }
+
+  getTimeSlots(date: String): Observable<Timeslot[]> {
+    const timeSlotsUrl = environment.url + '/api/v1/timeslots';
+    return this.http.post<Timeslot[]>(timeSlotsUrl, {"date": date});
   }
 
   makeOrderAuthorized(order: CheckoutOrder): Observable<CheckoutOrder> {

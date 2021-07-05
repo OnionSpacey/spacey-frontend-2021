@@ -19,7 +19,9 @@
         <mat-option
           *ngFor="let currentDate of dates"
           value="{{ currentDate }}"
-          >{{ currentDate.date | date: "hh:mm" }}</mat-option
+          >
+          {{ currentDate }}
+        </mat-option
         >
       </mat-select>
     </mat-form-field>

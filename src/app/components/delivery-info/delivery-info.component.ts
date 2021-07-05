@@ -3,6 +3,7 @@ import { Delivery } from '../../store/models/delivery';
 import { FormControl } from '@angular/forms';
 import CheckoutService from '../../store/service/checkout/checkout.service';
 import { Timeslot } from '../../store/models/timeslots.model';
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-delivery-info',
@@ -13,23 +14,12 @@ export class DeliveryInfoComponent {
   @Output() deliveryEvent = new EventEmitter<Delivery>();
   datePicker = new FormControl(new Date());
   delivery!: Delivery;
-  dates: Timeslot[] = [
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-    new Timeslot(new Date()),
-  ];
+  dates: number[] = [];
   doNotDisturb = false;
   noContact = false;
+  dateFormat = 'yyyy-MM-dd';
 
-  constructor(private checkoutService: CheckoutService) {}
+  constructor(private checkoutService: CheckoutService, private datePipe: DatePipe,) {}
 
   onChangeDelivery() {
     this.delivery = new Delivery(new Date(), this.doNotDisturb, this.noContact);
@@ -38,9 +28,11 @@ export class DeliveryInfoComponent {
 
   pickDataEvent() {
     this.checkoutService
-      .getTimeSlots(this.datePicker.value)
-      .subscribe((data: Timeslot[]) => {
-        this.dates = data;
+      .getTimeSlots(<string>this.datePipe.transform(this.datePicker.value, this.dateFormat))
+      .subscribe((data: any) => {
+        for (let i = 0; i < data.length; i++) {
+          this.dates[i] = new Date(data[i]).getHours();
+        }
       });
   }
 }
