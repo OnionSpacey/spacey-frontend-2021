@@ -1,6 +1,14 @@
 <div class="logout-div">
   <button
     mat-raised-button
+    class="order-btn"
+    (click)="toOrderHistory()"
+    color="accent"
+  >
+    Order history
+  </button>
+  <button
+    mat-raised-button
     class="logout-btn"
     (click)="logout()"
     color="accent"
@@ -51,7 +59,11 @@
       />
     </mat-form-field>
 
-    <mat-form-field class="profile-info-form-field" appearance="fill">
+    <mat-form-field
+      class="profile-info-form-field"
+      appearance="fill"
+      *ngIf="false"
+    >
       <mat-label> Date of birth </mat-label>
       <input
         type="text"
@@ -62,7 +74,7 @@
     </mat-form-field>
 
     <mat-radio-group formControlName="sex">
-      <mat-radio-button value="male" style="margin-right: 2%">
+      <mat-radio-button value="male" class="male-button">
         Male
       </mat-radio-button>
       <mat-radio-button value="female"> Female </mat-radio-button>
@@ -93,11 +105,7 @@
     </mat-form-field>
 
     <div class="house-apartm-line">
-      <mat-form-field
-        class="house-apartm-form-field"
-        style="margin-right: 10%"
-        appearance="fill"
-      >
+      <mat-form-field class="house-apartm-form-field" appearance="fill">
         <mat-label> House </mat-label>
         <input
           type="text"
@@ -107,7 +115,10 @@
         />
       </mat-form-field>
 
-      <mat-form-field class="house-apartm-form-field" appearance="fill">
+      <mat-form-field
+        class="house-apartm-form-field apartm-part"
+        appearance="fill"
+      >
         <mat-label> Apartment </mat-label>
         <input
           type="text"
@@ -145,11 +156,12 @@
       <input
         matInput
         formControlName="passwordOld"
-        [type]="hideOld ? 'passwordOld' : 'text'"
+        [type]="hideOld ? 'password' : 'text'"
       />
       <button
         mat-icon-button
         matSuffix
+        type="button"
         (click)="hideOld = !hideOld"
         [attr.aria-label]="'Hide password'"
         [attr.aria-pressed]="hideOld"
@@ -167,11 +179,12 @@
       <input
         matInput
         formControlName="passwordNew"
-        [type]="hideNew ? 'passwordNew' : 'text'"
+        [type]="hideNew ? 'password' : 'text'"
       />
       <button
         mat-icon-button
         matSuffix
+        type="button"
         (click)="hideNew = !hideNew"
         [attr.aria-label]="'Hide password'"
         [attr.aria-pressed]="hideNew"
@@ -189,11 +202,12 @@
       <input
         matInput
         formControlName="passwordRepeat"
-        [type]="hideRepeat ? 'passwordRepeat' : 'text'"
+        [type]="hideRepeat ? 'password' : 'text'"
       />
       <button
         mat-icon-button
         matSuffix
+        type="button"
         (click)="hideRepeat = !hideRepeat"
         [attr.aria-label]="'Hide password'"
         [attr.aria-pressed]="hideRepeat"

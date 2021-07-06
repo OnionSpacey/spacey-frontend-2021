@@ -3,9 +3,6 @@
     <h2>Spacey</h2>
   </button>
   <span class="gap"></span>
-  <button mat-flat-button color="primary" (click)="routeToPopular()">
-    Popular now
-  </button>
   <button
     mat-flat-button
     color="primary"
@@ -13,6 +10,7 @@
   >
     Women
   </button>
+
   <button
     mat-flat-button
     color="primary"
@@ -20,24 +18,83 @@
   >
     Men
   </button>
-  <button mat-flat-button color="primary" (click)="routeToAuctions()">
-    Auctions
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="routeToAddProduct()"
+    *ngIf="this.authService.isProductManager"
+  >
+    Add Product
   </button>
-  <button mat-flat-button color="primary" routerLink="/comparison">
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="routeToAddAuction()"
+    *ngIf="this.authService.isProductManager"
+  >
+    Add Auction
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="routeToCourierOrders()"
+    *ngIf="this.authService.isCourier"
+  >
+    My Orders
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    routerLink="/comparison"
+    *ngIf="
+      this.authService.isUnauthorizedUser || this.authService.isAuthorizedUser
+    "
+  >
     Comparison
   </button>
-  <span class="gap"></span>
-  <button mat-icon-button>
-    <mat-icon>search</mat-icon>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="routeToAuctions()"
+    *ngIf="
+      this.authService.isAuthorizedUser || this.authService.isProductManager
+    "
+  >
+    Auctions
   </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="routeToManageEmployees()"
+    *ngIf="this.authService.isAdmin"
+  >
+    Manage employees
+  </button>
+
+  <span class="gap"></span>
   <button mat-icon-button (click)="routeToProfile()">
     <mat-icon>perm_identity</mat-icon>
   </button>
   <button
     mat-icon-button
-    *ngIf="authService.isAuthorised()"
-    (click)="routeToCheckout()"
+    (click)="routeToCart()"
+    *ngIf="
+      this.authService.isUnauthorizedUser || this.authService.isAuthorizedUser
+    "
   >
     <mat-icon>shopping_cart</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    (click)="routeToCustomization()"
+    *ngIf="this.authService.isProductManager"
+  >
+    <mat-icon>settings</mat-icon>
   </button>
 </mat-toolbar>

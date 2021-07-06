@@ -43,13 +43,26 @@
   flex-direction: row;
 }
 
+.apartm-part {
+  margin-left: 10%;
+}
+
 .logout-div {
   width: 100%;
   margin-top: 1%;
   margin-bottom: 1%;
 }
 
-.logout-btn {
-  margin-left: 85%;
+.order-btn {
+  margin-left: 70%;
   width: 10%;
+}
+
+.logout-btn {
+  margin-left: 5%;
+  width: 10%;
+}
+
+.male-button {
+  margin-right: 2%;
 }

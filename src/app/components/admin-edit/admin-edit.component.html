@@ -5,9 +5,7 @@
   #employeeForm="ngForm"
   (ngSubmit)="onSubmit(editEmployeeForm, employeeForm)"
 >
-  <span></span>
-
-  <div *ngIf="employee" class="input-form">
+  <div class="input-form">
     <div class="column">
       <mat-label><h3>FIRST NAME</h3></mat-label>
       <mat-form-field class="emp-form-field" appearance="fill">
@@ -15,7 +13,6 @@
           matInput
           formControlName="firstName"
           type="text"
-          [(ngModel)]="employee.firstName"
           placeholder="Name"
         />
         <mat-error
@@ -32,7 +29,6 @@
           formControlName="email"
           type="text"
           [errorStateMatcher]="errorMatcher"
-          [(ngModel)]="employee.email"
           placeholder="email@example.com"
         />
         <mat-error
@@ -43,20 +39,16 @@
         >
           Please write correct address!
         </mat-error>
-        <mat-error *ngIf="editEmployeeForm.get('email')?.hasError('required')">
-          Email is<strong>required!</strong>
-        </mat-error>
       </mat-form-field>
 
       <mat-label><h3>ROLE</h3></mat-label>
       <mat-form-field class="emp-form-field" appearance="fill">
         <mat-select
-          [(value)]="employee.roleId"
           class="emp-form-field"
+          placeholder="Role"
           formControlName="roleId"
-          [compareWith]="compareObjects"
+          [compareWith]="compareRoles"
         >
-          <!--      <mat-select class="emp-form-field" formControlName="roleId" [compareWith]="compareObjects">-->
           <mat-option *ngFor="let role of roles" [value]="role.id">
             {{ role.name }}
           </mat-option>
@@ -71,7 +63,6 @@
           matInput
           formControlName="lastName"
           type="text"
-          [(ngModel)]="employee.lastName"
           placeholder="Surname"
         />
         <mat-error
@@ -87,7 +78,6 @@
           matInput
           formControlName="phoneNumber"
           type="text"
-          [(ngModel)]="employee.phoneNumber"
           placeholder="+380989898988"
         />
         <mat-icon matSuffix>mode_edit</mat-icon>
@@ -96,10 +86,10 @@
       <mat-label><h3>STATUS</h3></mat-label>
       <mat-form-field class="emp-form-field" appearance="fill">
         <mat-select
-          [(value)]="employee.statusId"
           class="emp-form-field"
+          placeholder="Status"
           formControlName="statusId"
-          [compareWith]="compareObjects"
+          [compareWith]="compareStatuses"
         >
           <mat-option *ngFor="let status of statuses" [value]="status.id">
             {{ status.name }}
@@ -121,7 +111,7 @@
       EDIT
     </button>
     <button mat-raised-button class="edit" (click)="back()" color="accent">
-      EMPLOYEE LIST
+      VIEW ALL EMPLOYEES
     </button>
   </div>
   <span></span>

@@ -14,6 +14,9 @@ import { EditUserProfile } from '../../store/models/edit-user-profile.model';
 import { TokenStorageService } from '../../store/service/auth/token-storage.service';
 import { Router } from '@angular/router';
 import { routeUrls } from '../../../environments/router-manager';
+import { ChangePassword } from '../../store/models/change-password.model';
+import { DialogService } from '../../store/service/dialog/dialog.service';
+import { validatorPatterns } from '../../../environments/validate-patterns';
 
 export class UserProfileErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -46,8 +49,8 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private dialogService: DialogService,
     private profileService: ProfileService,
-    private tokenStorageService: TokenStorageService,
     private router: Router
   ) {
     this.profileForm = this.formBuilder.group({
@@ -67,21 +70,21 @@ export class UserProfileComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,30}'),
+          Validators.pattern(validatorPatterns.passwordPattern),
         ],
       ],
       passwordNew: [
         '',
         [
           Validators.required,
-          Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,30}'),
+          Validators.pattern(validatorPatterns.passwordPattern),
         ],
       ],
       passwordRepeat: [
         '',
         [
           Validators.required,
-          Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,30}'),
+          Validators.pattern(validatorPatterns.passwordPattern),
         ],
       ],
     });
@@ -97,12 +100,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   logout(): void {
-    this.tokenStorageService.signOut();
+    this.profileService.logOut();
     this.router.navigateByUrl(routeUrls.login);
   }
 
+  toOrderHistory() {
+    this.router.navigateByUrl(routeUrls.orderHistory);
+  }
+
   onSubmitProfile(): void {
-    console.log('submiting new info');
     const editInfo = {
       firstName: this.profileForm.get('firstName')?.value,
       lastName: this.profileForm.get('secondName')?.value,
@@ -116,28 +122,74 @@ export class UserProfileComponent implements OnInit {
     } as EditUserProfile;
 
     this.profileService.editUserInfo(editInfo).subscribe(
-      (response) => {
-        alert('info changed');
+      () => {
+        this.dialogService.openMessage(' Profile info changed ', ' Close ');
       },
       (error) => {
         console.error(error);
-        alert('something went wrong. try again later');
+        this.dialogService.openMessage(
+          ' Something went wrong. Try again ',
+          ' Close '
+        );
       }
     );
   }
 
-  private changePassword(): void {}
+  private changePassword(): void {
+    const newPasswordData = {
+      oldPassword: this.passwordForm.get('passwordOld')?.value,
+      newPassword: this.passwordForm.get('passwordNew')?.value,
+      newPasswordRepeat: this.passwordForm.get('passwordRepeat')?.value,
+    } as ChangePassword;
+    this.profileService.changePassword(newPasswordData).subscribe(
+      () => {
+        console.log('password changed successfully');
+        this.dialogService.openMessage(
+          ' Your password has been changed ',
+          ' Close '
+        );
+      },
+      (error) => {
+        if (error.status == 400) {
+          this.dialogService.openMessage(
+            ' Repeated password does not match new password. Try again ',
+            ' Close '
+          );
+          console.error(error);
+        } else {
+          this.dialogService.openMessage(
+            ' Something went wrong. Try again ',
+            ' Close '
+          );
+          console.error(error);
+        }
+      }
+    );
+  }
 
   private loadProfileInfo(): void {
     this.profileService.getUserInfo().subscribe(
       (response) => {
         const data = response.body;
         this.userInfo = data!;
-        console.log('user info loaded');
+        this.profileForm.get('firstName')?.setValue(data?.firstName);
+        this.profileForm.get('secondName')?.setValue(data?.lastName);
       },
       (error) => {
-        console.warn('Loading propositions failed');
-        this.profileService.handleError(error);
+        if (error.status == 404) {
+          console.error(error);
+          this.dialogService.openMessage(
+            ' Something went wrong while authorizing user. Try again ',
+            ' Close '
+          );
+          this.logout();
+        } else {
+          console.error(error);
+          this.dialogService.openMessage(
+            ' Something went wrong. Try again ',
+            ' Close '
+          );
+        }
       }
     );
   }
